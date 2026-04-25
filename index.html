@@ -454,6 +454,15 @@ body{
 .o-num:active{transform:scale(0.88);}
 .o-num.used{opacity:.22;pointer-events:none;transform:scale(0.9);}
 
+
+
+/* ═══════════════════════════════════
+   INTELLICOR ASSESSMENT PREP
+═══════════════════════════════════ */
+.wc-assess{grid-column:1/-1;background:linear-gradient(135deg,rgba(0,230,118,.15),rgba(0,229,255,.13),rgba(255,217,61,.12));border-color:rgba(0,230,118,.35);box-shadow:0 0 34px rgba(0,230,118,.13);padding:18px 14px;}
+.wc-assess .wc-icon{font-size:clamp(48px,13vw,64px);}.badge-a{background:rgba(0,230,118,.18);color:var(--green);}
+.assess-wrap{width:100%;max-width:640px;padding:8px 14px 22px;display:flex;flex-direction:column;gap:12px;}.assess-hero{background:linear-gradient(145deg,rgba(0,229,255,.13),rgba(178,75,243,.10));border:1.5px solid var(--border);border-radius:var(--rl);padding:18px;text-align:center;}.assess-hero-icon{font-size:clamp(58px,16vw,82px);filter:drop-shadow(0 0 24px rgba(0,229,255,.35));}.assess-hero h2{font-size:clamp(22px,6vw,34px);line-height:1.1;color:var(--white);margin-top:4px;}.assess-hero p{font-family:'Nunito',sans-serif;font-weight:800;color:var(--muted);font-size:clamp(12px,3.3vw,15px);margin-top:6px;}.assess-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;}.assess-skill{background:var(--panel);border:1.5px solid var(--border);border-radius:var(--r);padding:13px 10px;text-align:center;}.assess-skill .as-i{font-size:32px;}.assess-skill .as-t{font-size:clamp(12px,3.2vw,15px);font-weight:900;color:var(--white);}.assess-skill .as-d{font-family:'Nunito',sans-serif;font-size:clamp(10px,2.7vw,12px);font-weight:700;color:var(--muted);margin-top:2px;}.assess-start{width:100%;padding:15px 18px;border-radius:50px;border:none;cursor:pointer;font-family:'Baloo 2',cursive;font-weight:900;font-size:clamp(16px,4.4vw,20px);background:linear-gradient(135deg,var(--green),var(--cyan));color:#07101D;box-shadow:0 0 26px rgba(0,229,255,.35);transition:transform .15s;}.assess-start:active{transform:scale(.94);}.assess-note{font-family:'Nunito',sans-serif;font-size:clamp(11px,3vw,13px);font-weight:800;color:var(--muted);text-align:center;}.assess-stage{width:calc(100% - 28px);max-width:620px;background:var(--panel);border:1.5px solid var(--border);border-radius:var(--rl);padding:16px;margin-top:4px;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}.assess-prompt{font-size:clamp(18px,5vw,26px);font-weight:900;color:var(--white);line-height:1.15;}.assess-sub{font-family:'Nunito',sans-serif;font-size:clamp(12px,3.2vw,15px);font-weight:800;color:var(--muted);}.assess-targets{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;}.a-target{width:clamp(70px,19vw,95px);height:clamp(70px,19vw,95px);border-radius:24px;border:2.5px solid var(--border);background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:clamp(34px,10vw,50px);cursor:pointer;transition:transform .15s,border-color .2s;color:var(--white);font-family:'Baloo 2',cursive;font-weight:900;}.a-target:active{transform:scale(.9);}.a-target.hit{border-color:var(--green);background:rgba(0,230,118,.16);animation:pi .3s;}.a-target.miss{border-color:var(--coral);background:rgba(255,82,82,.16);animation:sk .4s;}.drag-zone{width:150px;height:110px;border:3px dashed rgba(0,229,255,.45);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:42px;background:rgba(0,229,255,.08);color:var(--cyan);}.drag-item{width:92px;height:92px;border-radius:24px;border:none;background:linear-gradient(135deg,var(--gold),var(--amber));display:flex;align-items:center;justify-content:center;font-size:46px;cursor:grab;box-shadow:var(--glow-g);touch-action:none;}.headset-btn{padding:14px 22px;border-radius:50px;border:2px solid rgba(0,229,255,.35);background:rgba(0,229,255,.12);color:var(--cyan);font-family:'Baloo 2',cursive;font-weight:900;font-size:clamp(15px,4vw,19px);cursor:pointer;}.assess-mini-progress{font-family:'Nunito',sans-serif;font-weight:900;color:var(--cyan);font-size:clamp(12px,3.3vw,15px);}@media(max-width:420px){.assess-list{grid-template-columns:1fr;}.assess-stage{min-height:270px;}}
+
 /* ═══════════════════════════════════
    CELEBRATION
 ═══════════════════════════════════ */
@@ -636,6 +645,12 @@ option{background:#1a1e3c;color:white;}
       <div class="wc-desc">Counting, adding & shapes!</div>
       <div class="wc-badge badge-m" id="math-badge">4 Games 🚀</div>
     </button>
+    <button class="world-card wc-assess" onclick="showScreen('scr-assess-home')">
+      <div class="wc-icon">🎧</div>
+      <div class="wc-name">Assessment Prep</div>
+      <div class="wc-desc">Practice mouse, headset, listening, dragging & independent work!</div>
+      <div class="wc-badge badge-a">Intellicor Ready 🌟</div>
+    </button>
   </div>
 
   <button class="parent-btn" onclick="openPin()">🔒 Parent Corner</button>
@@ -809,6 +824,45 @@ option{background:#1a1e3c;color:white;}
   <div class="order-slots" id="order-slots"></div>
   <div class="feedback-bar" id="order-fb"></div>
   <div class="order-tray" id="order-tray"></div>
+</div>
+
+
+
+<!-- ══════════════ INTELLICOR ASSESSMENT PREP HOME ══════════════ -->
+<div id="scr-assess-home" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('scr-home')">🏠</button>
+    <div class="screen-title">🎧 Assessment Prep</div>
+    <div class="pill">⭐ <span class="pill-y" id="assess-stars-h">0</span></div>
+  </div>
+  <div class="assess-wrap">
+    <div class="assess-hero">
+      <div class="assess-hero-icon">💻🎧</div>
+      <h2>Ramisa's Assessment Mission</h2>
+      <p>Practice the same computer skills needed for the admissions assessment: listening, clicking, dragging, and answering independently.</p>
+    </div>
+    <div class="assess-list">
+      <div class="assess-skill"><div class="as-i">🖱️</div><div class="as-t">Click Carefully</div><div class="as-d">Choose the correct answer.</div></div>
+      <div class="assess-skill"><div class="as-i">🎧</div><div class="as-t">Listen & Answer</div><div class="as-d">Use headphones and follow directions.</div></div>
+      <div class="assess-skill"><div class="as-i">🤏</div><div class="as-t">Drag & Drop</div><div class="as-d">Move objects to the right place.</div></div>
+      <div class="assess-skill"><div class="as-i">🌟</div><div class="as-t">Work Alone</div><div class="as-d">Build confidence without parent help.</div></div>
+    </div>
+    <button class="assess-start" onclick="startAssess()">Start Assessment Game 🚀</button>
+    <div class="assess-note">Tip: Let her wear headphones and use a real mouse or trackpad for best practice.</div>
+  </div>
+</div>
+
+<!-- ══════════════ INTELLICOR ASSESSMENT GAME ══════════════ -->
+<div id="scr-assess-game" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('scr-assess-home')">← Back</button>
+    <div class="screen-title">Ready Mission 🚀</div>
+    <div class="pill">⭐ <span class="pill-y" id="assess-s">0</span></div>
+  </div>
+  <div class="round-dots" id="assess-dots"></div>
+  <div class="assess-mini-progress" id="assess-progress">Round 1 of 10</div>
+  <div class="assess-stage" id="assess-stage"></div>
+  <div class="feedback-bar" id="assess-fb"></div>
 </div>
 
 <!-- ══════════════ CELEBRATION ══════════════ -->
@@ -1284,6 +1338,7 @@ function celebrate(fromGame,mascot='🦉'){
   else if(fromGame==='spell') btn.onclick=startSpell;
   else if(fromGame==='hunt')  btn.onclick=startHunt;
   else if(fromGame==='match') btn.onclick=startMatch;
+  else if(fromGame==='assess') btn.onclick=startAssess;
   speak('Amazing! You are a superstar learner! I am so proud of you!',0.84,1.15);
   showScreen('scr-cel'); confetti(3.2);
 }
@@ -1706,6 +1761,23 @@ function orderTap(n,btn){
     setTimeout(()=>{ slot.classList.remove('wrong','filled'); slot.textContent=''; btn.classList.remove('used'); },700);
   }
 }
+
+
+/* ═══════════════════════════════════
+   ─── INTELLICOR ASSESSMENT PREP GAME ───
+═══════════════════════════════════ */
+const AS_ROUNDS=10;let asR=0,asRes=[],asLocked=false;const AS_EMOJIS=['🐱','🐶','🍎','⭐','🚗','🌙','🐠','🌸','🦋','⚽'];const AS_COLORS=[{name:'red',emoji:'🔴'},{name:'blue',emoji:'🔵'},{name:'yellow',emoji:'🟡'},{name:'green',emoji:'🟢'},{name:'purple',emoji:'🟣'},{name:'orange',emoji:'🟠'}];
+function startAssess(){asR=0;asRes=[];asLocked=false;showScreen('scr-assess-game');loadAssessRound();}
+function loadAssessRound(){if(asR>=AS_ROUNDS){celebrate('assess','🎧');return;}asLocked=false;buildDots('assess-dots',AS_ROUNDS,asRes,asR);document.getElementById('assess-progress').textContent=`Round ${asR+1} of ${AS_ROUNDS}`;const fb=document.getElementById('assess-fb');fb.textContent='';fb.className='feedback-bar';const types=['clickEmoji','listenColor','dragStar','listenLetter','countQuick'];const type=types[asR%types.length];if(type==='clickEmoji')buildClickEmojiRound();if(type==='listenColor')buildListenColorRound();if(type==='dragStar')buildDragRound();if(type==='listenLetter')buildListenLetterRound();if(type==='countQuick')buildCountQuickRound();}
+function assessStage(html){document.getElementById('assess-stage').innerHTML=html;}
+function assessCorrect(msg='Great job!'){if(asLocked)return;asLocked=true;addStars(2);asRes[asR]=true;const fb=document.getElementById('assess-fb');fb.textContent='🎉 '+msg;fb.className='feedback-bar fb-ok';speak(msg,0.88,1.2);confetti(1.3);asR++;buildDots('assess-dots',AS_ROUNDS,asRes,asR);setTimeout(loadAssessRound,1500);}
+function assessWrong(msg='Try the next one!'){if(asLocked)return;asLocked=true;asRes[asR]=false;const fb=document.getElementById('assess-fb');fb.textContent='💪 '+msg;fb.className='feedback-bar fb-bad';speak(msg,0.84,1.08);asR++;buildDots('assess-dots',AS_ROUNDS,asRes,asR);setTimeout(loadAssessRound,1700);}
+function buildClickEmojiRound(){const correct=AS_EMOJIS[rnd(0,AS_EMOJIS.length-1)];const opts=shuffle([correct,...shuffle(AS_EMOJIS.filter(e=>e!==correct)).slice(0,3)]);assessStage(`<div class="assess-prompt">Click the ${correct}</div><div class="assess-sub">Move the mouse and choose carefully.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(e=>{const b=document.createElement('button');b.className='a-target';b.textContent=e;b.onclick=()=>{b.classList.add(e===correct?'hit':'miss');e===correct?assessCorrect('Excellent clicking!'):assessWrong(`That was not the ${correct}. Keep practicing!`);};box.appendChild(b);});setTimeout(()=>speak(`Click the ${correct}`,0.82,1.12),250);}
+function buildListenColorRound(){const correct=AS_COLORS[rnd(0,AS_COLORS.length-1)];const opts=shuffle([correct,...shuffle(AS_COLORS.filter(c=>c.name!==correct.name)).slice(0,3)]);assessStage(`<button class="headset-btn" onclick="speak('Click ${correct.name}',0.82,1.1)">🎧 Listen Again</button><div class="assess-prompt">Listen, then click the color.</div><div class="assess-sub">This builds headset confidence.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(c=>{const b=document.createElement('button');b.className='a-target';b.textContent=c.emoji;b.onclick=()=>{b.classList.add(c.name===correct.name?'hit':'miss');c.name===correct.name?assessCorrect('Wonderful listening!'):assessWrong(`The answer was ${correct.name}.`);};box.appendChild(b);});setTimeout(()=>speak(`Click ${correct.name}`,0.82,1.1),350);}
+function buildDragRound(){assessStage(`<div class="assess-prompt">Drag the star into the box.</div><div class="assess-sub">Practice drag-and-drop like a computer test.</div><button class="drag-item" id="drag-star" draggable="true">⭐</button><div class="drag-zone" id="drop-zone">Drop here</div>`);const star=document.getElementById('drag-star'),zone=document.getElementById('drop-zone');star.addEventListener('dragstart',ev=>ev.dataTransfer.setData('text/plain','star'));zone.addEventListener('dragover',ev=>ev.preventDefault());zone.addEventListener('drop',ev=>{ev.preventDefault();zone.textContent='⭐';assessCorrect('Perfect drag and drop!');});star.addEventListener('click',()=>assessWrong('Try dragging the star into the box.'));setTimeout(()=>speak('Drag the star into the box.',0.82,1.1),250);}
+function buildListenLetterRound(){const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');const correct=letters[rnd(0,25)];const opts=shuffle([correct,...shuffle(letters.filter(l=>l!==correct)).slice(0,3)]);assessStage(`<button class="headset-btn" onclick="speak('Find the letter ${correct}',0.82,1.1)">🎧 Listen Again</button><div class="assess-prompt">Find the letter you hear.</div><div class="assess-sub">Listen first, then answer.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(l=>{const b=document.createElement('button');b.className='a-target';b.textContent=l;b.onclick=()=>{b.classList.add(l===correct?'hit':'miss');l===correct?assessCorrect('Great letter listening!'):assessWrong(`The letter was ${correct}.`);};box.appendChild(b);});setTimeout(()=>speak(`Find the letter ${correct}`,0.82,1.1),350);}
+function buildCountQuickRound(){const n=rnd(2,6),em=AS_EMOJIS[rnd(0,AS_EMOJIS.length-1)];const opts=shuffle([n,...shuffle([1,2,3,4,5,6,7,8].filter(x=>x!==n)).slice(0,3)]);assessStage(`<div class="assess-prompt">Count and choose the number.</div><div class="assess-sub">Work independently and answer when ready.</div><div style="font-size:42px;letter-spacing:5px;line-height:1.25;max-width:420px;">${Array(n).fill(em).join(' ')}</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(x=>{const b=document.createElement('button');b.className='a-target';b.textContent=x;b.onclick=()=>{b.classList.add(x===n?'hit':'miss');x===n?assessCorrect('Excellent counting!'):assessWrong(`There were ${n}. Nice try!`);};box.appendChild(b);});setTimeout(()=>speak('Count the pictures and choose the number.',0.82,1.1),250);}
+
 </script>
 </body>
 </html>
