@@ -1235,21 +1235,39 @@ function updatePinDots(){
 /* ────────────────────────────────────────
    SPEECH
 ──────────────────────────────────────── */
-if('speechSynthesis' in window){
-  speechSynthesis.getVoices();
-  speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+/* ── Voice cache: getVoices() returns [] until
+   the voiceschanged event fires, so we store
+   them once they're ready and reuse the array
+   in every speak() call ── */
+let cachedVoices = [];
+function loadVoices() { cachedVoices = speechSynthesis.getVoices(); }
+if ('speechSynthesis' in window) {
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
 }
-function speak(text,rate=0.84,pitch=1.14){
-  if(!('speechSynthesis' in window)) return;
+function speak(text, rate = 0.84, pitch = 1.14) {
+  if (!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.rate=rate;u.pitch=pitch;u.volume=1;
-  const vv=speechSynthesis.getVoices();
-  const f=vv.find(v=>/samantha|victoria|karen|susan|zira|tessa|female|woman/i.test(v.name));
-  if(f) u.voice=f;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = rate; u.pitch = pitch; u.volume = 1;
+  /* Use the cached list instead of re-calling getVoices()
+     which can return [] if voices haven't loaded yet */
+  const f = cachedVoices.find(v =>
+    /samantha|victoria|karen|susan|zira|tessa|female|woman/i.test(v.name)
+  );
+  if (f) u.voice = f;
   speechSynthesis.speak(u);
 }
 
+
+   let audioUnlocked = false;
+document.addEventListener('click', () => {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  const u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
+  speechSynthesis.speak(u);
+});
 /* ────────────────────────────────────────
    STAR FIELD
 ──────────────────────────────────────── */
@@ -1364,7 +1382,10 @@ let abcLast='';
 
 function showAbc(){
   buildAbcGrid(); showScreen('scr-abc');
-  speak("Welcome to ABC Land! Tap any letter to learn it!",0.82,1.15);
+  /* speak() called directly (no setTimeout) so it stays
+     inside the user-tap gesture chain — required by
+     mobile browsers to allow audio playback */
+  speak("Welcome to ABC Land! Tap any letter to learn it!", 0.82, 1.15);
 }
 function buildAbcGrid(){
   const g=document.getElementById('abc-grid'); g.innerHTML='';
@@ -1435,7 +1456,7 @@ function loadSpellWord(){
     b.style.background=TC[(li*7)%TC.length]; b.textContent=l; b.dataset.li=li;
     b.onclick=()=>spellTap(l,b); tray.appendChild(b);
   });
-  setTimeout(()=>speak("Can you spell it? "+spW.h,0.82,1.12),200);
+  speak("Can you spell it? "+spW.h,0.82,1.12);
 }
 function spellTap(l,btn){
   if(btn.classList.contains('used')||spLocked) return;
@@ -1488,7 +1509,7 @@ function loadHuntRound(){
     const b=document.createElement('button'); b.className='h-choice'; b.textContent=l;
     b.onclick=()=>huntTap(l,t,b); el.appendChild(b);
   });
-  setTimeout(()=>speak(`Can you find the letter ${t}?`,0.84,1.12),150);
+  speak(`Can you find the letter ${t}?`,0.84,1.12); 
 }
 function huntTap(chosen,target,btn){
   if(hLocked) return; hLocked=true;
@@ -1585,7 +1606,7 @@ function loadCountRound(){
   const opts=shuffle([n,...shuffle(pool).slice(0,3)]);
   const ch=document.getElementById('count-choices'); ch.innerHTML='';
   opts.forEach(x=>{ const b=document.createElement('button'); b.className='num-btn'; b.textContent=x; b.onclick=()=>countTap(x,n,b); ch.appendChild(b); });
-  setTimeout(()=>speak(`How many ${d.n} do you see?`,0.84,1.12),150);
+ speak(`How many ${d.n} do you see?`, 0.84, 1.12);
 }
 function countTap(chosen,correct,btn){
   if(cntLocked) return; cntLocked=true;
@@ -1635,7 +1656,7 @@ function loadAddRound(){
   const opts=shuffle([ans,...shuffle(pool).slice(0,3)]);
   const ch=document.getElementById('add-choices'); ch.innerHTML='';
   opts.forEach(n=>{ const btn=document.createElement('button'); btn.className='num-btn'; btn.textContent=n; btn.onclick=()=>addTap(n,ans,btn,a,b); ch.appendChild(btn); });
-  setTimeout(()=>speak(`${a} plus ${b} equals what?`,0.84,1.12),200);
+ speak(`${a} plus ${b} equals what?`,0.84,1.12);
 }
 function addTap(chosen,correct,btn,a,b){
   if(addLocked) return; addLocked=true;
@@ -1692,7 +1713,7 @@ function loadShapeRound(){
     b.innerHTML=`<div class="sh-icon"><svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" style="color:${s.color}">${s.svg}</svg></div><div class="sh-name">${s.name}</div>`;
     b.onclick=()=>shapeTap(s.name,tg.name,b); ch.appendChild(b);
   });
-  setTimeout(()=>speak('What shape is this?',0.84,1.12),150);
+  speak('What shape is this?',0.84,1.12);
 }
 function shapeTap(chosen,correct,btn){
   if(shLocked) return; shLocked=true;
@@ -1735,7 +1756,7 @@ function loadOrderRound(){
     b.style.background=NC[n-1]; b.style.boxShadow=`0 6px 20px ${NC[n-1]}55`;
     b.onclick=()=>orderTap(n,b); tr.appendChild(b);
   });
-  setTimeout(()=>speak('Tap the numbers in order! Start with 1!',0.84,1.12),200);
+  speak('Tap the numbers in order! Start with 1!',0.84,1.12);
 }
 function orderTap(n,btn){
   if(orLocked) return;
@@ -1772,11 +1793,11 @@ function loadAssessRound(){if(asR>=AS_ROUNDS){celebrate('assess','🎧');return;
 function assessStage(html){document.getElementById('assess-stage').innerHTML=html;}
 function assessCorrect(msg='Great job!'){if(asLocked)return;asLocked=true;addStars(2);asRes[asR]=true;const fb=document.getElementById('assess-fb');fb.textContent='🎉 '+msg;fb.className='feedback-bar fb-ok';speak(msg,0.88,1.2);confetti(1.3);asR++;buildDots('assess-dots',AS_ROUNDS,asRes,asR);setTimeout(loadAssessRound,1500);}
 function assessWrong(msg='Try the next one!'){if(asLocked)return;asLocked=true;asRes[asR]=false;const fb=document.getElementById('assess-fb');fb.textContent='💪 '+msg;fb.className='feedback-bar fb-bad';speak(msg,0.84,1.08);asR++;buildDots('assess-dots',AS_ROUNDS,asRes,asR);setTimeout(loadAssessRound,1700);}
-function buildClickEmojiRound(){const correct=AS_EMOJIS[rnd(0,AS_EMOJIS.length-1)];const opts=shuffle([correct,...shuffle(AS_EMOJIS.filter(e=>e!==correct)).slice(0,3)]);assessStage(`<div class="assess-prompt">Click the ${correct}</div><div class="assess-sub">Move the mouse and choose carefully.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(e=>{const b=document.createElement('button');b.className='a-target';b.textContent=e;b.onclick=()=>{b.classList.add(e===correct?'hit':'miss');e===correct?assessCorrect('Excellent clicking!'):assessWrong(`That was not the ${correct}. Keep practicing!`);};box.appendChild(b);});setTimeout(()=>speak(`Click the ${correct}`,0.82,1.12),250);}
-function buildListenColorRound(){const correct=AS_COLORS[rnd(0,AS_COLORS.length-1)];const opts=shuffle([correct,...shuffle(AS_COLORS.filter(c=>c.name!==correct.name)).slice(0,3)]);assessStage(`<button class="headset-btn" onclick="speak('Click ${correct.name}',0.82,1.1)">🎧 Listen Again</button><div class="assess-prompt">Listen, then click the color.</div><div class="assess-sub">This builds headset confidence.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(c=>{const b=document.createElement('button');b.className='a-target';b.textContent=c.emoji;b.onclick=()=>{b.classList.add(c.name===correct.name?'hit':'miss');c.name===correct.name?assessCorrect('Wonderful listening!'):assessWrong(`The answer was ${correct.name}.`);};box.appendChild(b);});setTimeout(()=>speak(`Click ${correct.name}`,0.82,1.1),350);}
-function buildDragRound(){assessStage(`<div class="assess-prompt">Drag the star into the box.</div><div class="assess-sub">Practice drag-and-drop like a computer test.</div><button class="drag-item" id="drag-star" draggable="true">⭐</button><div class="drag-zone" id="drop-zone">Drop here</div>`);const star=document.getElementById('drag-star'),zone=document.getElementById('drop-zone');star.addEventListener('dragstart',ev=>ev.dataTransfer.setData('text/plain','star'));zone.addEventListener('dragover',ev=>ev.preventDefault());zone.addEventListener('drop',ev=>{ev.preventDefault();zone.textContent='⭐';assessCorrect('Perfect drag and drop!');});star.addEventListener('click',()=>assessWrong('Try dragging the star into the box.'));setTimeout(()=>speak('Drag the star into the box.',0.82,1.1),250);}
-function buildListenLetterRound(){const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');const correct=letters[rnd(0,25)];const opts=shuffle([correct,...shuffle(letters.filter(l=>l!==correct)).slice(0,3)]);assessStage(`<button class="headset-btn" onclick="speak('Find the letter ${correct}',0.82,1.1)">🎧 Listen Again</button><div class="assess-prompt">Find the letter you hear.</div><div class="assess-sub">Listen first, then answer.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(l=>{const b=document.createElement('button');b.className='a-target';b.textContent=l;b.onclick=()=>{b.classList.add(l===correct?'hit':'miss');l===correct?assessCorrect('Great letter listening!'):assessWrong(`The letter was ${correct}.`);};box.appendChild(b);});setTimeout(()=>speak(`Find the letter ${correct}`,0.82,1.1),350);}
-function buildCountQuickRound(){const n=rnd(2,6),em=AS_EMOJIS[rnd(0,AS_EMOJIS.length-1)];const opts=shuffle([n,...shuffle([1,2,3,4,5,6,7,8].filter(x=>x!==n)).slice(0,3)]);assessStage(`<div class="assess-prompt">Count and choose the number.</div><div class="assess-sub">Work independently and answer when ready.</div><div style="font-size:42px;letter-spacing:5px;line-height:1.25;max-width:420px;">${Array(n).fill(em).join(' ')}</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(x=>{const b=document.createElement('button');b.className='a-target';b.textContent=x;b.onclick=()=>{b.classList.add(x===n?'hit':'miss');x===n?assessCorrect('Excellent counting!'):assessWrong(`There were ${n}. Nice try!`);};box.appendChild(b);});setTimeout(()=>speak('Count the pictures and choose the number.',0.82,1.1),250);}
+function buildClickEmojiRound(){const correct=AS_EMOJIS[rnd(0,AS_EMOJIS.length-1)];const opts=shuffle([correct,...shuffle(AS_EMOJIS.filter(e=>e!==correct)).slice(0,3)]);assessStage(`<div class="assess-prompt">Click the ${correct}</div><div class="assess-sub">Move the mouse and choose carefully.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(e=>{const b=document.createElement('button');b.className='a-target';b.textContent=e;b.onclick=()=>{b.classList.add(e===correct?'hit':'miss');e===correct?assessCorrect('Excellent clicking!'):assessWrong(`That was not the ${correct}. Keep practicing!`);};box.appendChild(b);});speak(`Click the ${correct}`,0.82,1.12);}
+function buildListenColorRound(){const correct=AS_COLORS[rnd(0,AS_COLORS.length-1)];const opts=shuffle([correct,...shuffle(AS_COLORS.filter(c=>c.name!==correct.name)).slice(0,3)]);assessStage(`<button class="headset-btn" onclick="speak('Click ${correct.name}',0.82,1.1)">🎧 Listen Again</button><div class="assess-prompt">Listen, then click the color.</div><div class="assess-sub">This builds headset confidence.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(c=>{const b=document.createElement('button');b.className='a-target';b.textContent=c.emoji;b.onclick=()=>{b.classList.add(c.name===correct.name?'hit':'miss');c.name===correct.name?assessCorrect('Wonderful listening!'):assessWrong(`The answer was ${correct.name}.`);};box.appendChild(b);});speak(`Click ${correct.name}`,0.82,1.1);}
+function buildDragRound(){assessStage(`<div class="assess-prompt">Drag the star into the box.</div><div class="assess-sub">Practice drag-and-drop like a computer test.</div><button class="drag-item" id="drag-star" draggable="true">⭐</button><div class="drag-zone" id="drop-zone">Drop here</div>`);const star=document.getElementById('drag-star'),zone=document.getElementById('drop-zone');star.addEventListener('dragstart',ev=>ev.dataTransfer.setData('text/plain','star'));zone.addEventListener('dragover',ev=>ev.preventDefault());zone.addEventListener('drop',ev=>{ev.preventDefault();zone.textContent='⭐';assessCorrect('Perfect drag and drop!');});star.addEventListener('click',()=>assessWrong('Try dragging the star into the box.'));speak('Drag the star into the box.',0.82,1.1);}
+function buildListenLetterRound(){const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');const correct=letters[rnd(0,25)];const opts=shuffle([correct,...shuffle(letters.filter(l=>l!==correct)).slice(0,3)]);assessStage(`<button class="headset-btn" onclick="speak('Find the letter ${correct}',0.82,1.1)">🎧 Listen Again</button><div class="assess-prompt">Find the letter you hear.</div><div class="assess-sub">Listen first, then answer.</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(l=>{const b=document.createElement('button');b.className='a-target';b.textContent=l;b.onclick=()=>{b.classList.add(l===correct?'hit':'miss');l===correct?assessCorrect('Great letter listening!'):assessWrong(`The letter was ${correct}.`);};box.appendChild(b);});speak(`Find the letter ${correct}`,0.82,1.1);}
+function buildCountQuickRound(){const n=rnd(2,6),em=AS_EMOJIS[rnd(0,AS_EMOJIS.length-1)];const opts=shuffle([n,...shuffle([1,2,3,4,5,6,7,8].filter(x=>x!==n)).slice(0,3)]);assessStage(`<div class="assess-prompt">Count and choose the number.</div><div class="assess-sub">Work independently and answer when ready.</div><div style="font-size:42px;letter-spacing:5px;line-height:1.25;max-width:420px;">${Array(n).fill(em).join(' ')}</div><div class="assess-targets" id="as-targets"></div>`);const box=document.getElementById('as-targets');opts.forEach(x=>{const b=document.createElement('button');b.className='a-target';b.textContent=x;b.onclick=()=>{b.classList.add(x===n?'hit':'miss');x===n?assessCorrect('Excellent counting!'):assessWrong(`There were ${n}. Nice try!`);};box.appendChild(b);});speak('Count the pictures and choose the number.',0.82,1.1);}
 
 </script>
 </body>
